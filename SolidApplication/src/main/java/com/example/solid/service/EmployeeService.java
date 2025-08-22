@@ -2,10 +2,10 @@ package com.example.solid.service;
 
 import com.example.solid.model.dto.EmployeeDTO;
 import com.example.solid.exception.EmployeeNotFoundException;
-import com.example.solid.model.Customers;
-import com.example.solid.model.Employees;
-import com.example.solid.model.Projects;
-import com.example.solid.model.Trainings;
+import com.example.solid.model.Customer;
+import com.example.solid.model.Employee;
+import com.example.solid.model.Project;
+import com.example.solid.model.Training;
 import com.example.solid.repository.*;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -32,28 +32,28 @@ public class EmployeeService {
         this.trainingRepository = trainingRepository;
     }
 
-    public Flux<Employees> getAll()  {
+    public Flux<Employee> getAll()  {
         return repository.findAll()
                 .switchIfEmpty(Mono.error(new RuntimeException("No employee data available")));
     }
 
-    public Mono<Employees> create(Employees emp) {
+    public Mono<Employee> create(Employee emp) {
         return repository.save(emp)
                 .onErrorMap(ex ->new RuntimeException("Failed to create employee :"+ex.getMessage()));
     }
 
-    public Mono<Employees> getById(String id) {
+    public Mono<Employee> getById(String id) {
         return repository.findById(id)
                 .switchIfEmpty(Mono.error(new EmployeeNotFoundException(EMPLOYEE_NOT_FOUND + id)));
     }
 
-    public Mono<Employees> update(String id, Employees emp) {
+    public Mono<Employee> update(String id, Employee emp) {
         return repository.findById(id)
                 .switchIfEmpty(Mono.error(new EmployeeNotFoundException(EMPLOYEE_NOT_FOUND + id)))
                 .flatMap(
                         existing ->
                                 repository.save(
-                                        Employees.builder()
+                                        Employee.builder()
                                                 .id(emp.getId())
                                                 .role(emp.getRole())
                                                 .name(emp.getName())
@@ -75,13 +75,13 @@ public class EmployeeService {
     }
 
 
-    public Flux<Employees> getAllPaginated(int page, int size) {
+    public Flux<Employee> getAllPaginated(int page, int size) {
         return repository.findAll()
                 .skip((long) page * size)
                 .take(size);
     }
 
-    public Flux<Employees> getHighSalaryEmployees(double salary) {
+    public Flux<Employee> getHighSalaryEmployees(double salary) {
         return employeeCustomRepository.findEmployeesBySalaryGreaterThan(salary);
     }
 
@@ -91,18 +91,18 @@ public class EmployeeService {
     }
 
 
-    private Mono<EmployeeDTO> mapToDTO (Employees emp) {
-        Mono<Projects> projectMono = (emp.getProjectId() != null) ?
+    private Mono<EmployeeDTO> mapToDTO (Employee emp) {
+        Mono<Project> projectMono = (emp.getProjectId() != null) ?
                 projectRepository.findById(emp.getProjectId()) : Mono.empty();
 
-        Mono<Customers> customerMono = (emp.getCustomerId() != null) ?
+        Mono<Customer> customerMono = (emp.getCustomerId() != null) ?
                 customerRepository.findById(emp.getCustomerId()) : Mono.empty();
 
-        Flux<Trainings> trainingsFlux = (emp.getTrainingIds() != null) ?
+        Flux<Training> trainingsFlux = (emp.getTrainingIds() != null) ?
                 trainingRepository.findAllById(emp.getTrainingIds()) : Flux.empty();
 
-        return Mono.zip(Mono.just(emp), projectMono.defaultIfEmpty(new Projects()),
-                        customerMono.defaultIfEmpty(new Customers()),
+        return Mono.zip(Mono.just(emp), projectMono.defaultIfEmpty(new Project()),
+                        customerMono.defaultIfEmpty(new Customer()),
                         trainingsFlux.collectList())
                 .map(tuple -> {
                     EmployeeDTO dto = new EmployeeDTO();
@@ -113,7 +113,7 @@ public class EmployeeService {
                     dto.setProjectName(tuple.getT2().getName());
                     dto.setCustomerName(tuple.getT3().getName());
                     dto.setTrainings(tuple.getT4().stream()
-                            .map(Trainings::getTitle)
+                            .map(Training::getTitle)
                             .toList());
                     return dto;
                 });

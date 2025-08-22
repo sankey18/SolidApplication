@@ -1,8 +1,8 @@
 package com.example.solid.controller;
 
-import com.example.solid.model.Customers;
-import com.example.solid.model.Employees;
-import com.example.solid.model.Projects;
+import com.example.solid.model.Customer;
+import com.example.solid.model.Employee;
+import com.example.solid.model.Project;
 import com.example.solid.service.CustomerService;
 import com.example.solid.service.EmployeeService;
 import com.example.solid.service.ProjectService;
@@ -38,12 +38,12 @@ public class PaginatedController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "Paged employees list",
                             content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = Employees.class)))
+                                    schema = @Schema(implementation = Employee.class)))
             }
     )
     @GetMapping("/employees/paged")
-    public Flux<Employees> getAllPaginatedEmployees(@RequestParam(defaultValue = "0") int page,
-                                           @RequestParam(defaultValue = "5") int size) {
+    public Flux<Employee> getAllPaginatedEmployees(@RequestParam(defaultValue = "0") int page,
+                                                   @RequestParam(defaultValue = "5") int size) {
         return employeeService.getAllPaginated(page, size);
     }
 
@@ -58,12 +58,12 @@ public class PaginatedController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "Paged customers list",
                             content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = Customers.class)))
+                                    schema = @Schema(implementation = Customer.class)))
             }
     )
     @GetMapping("/customers/paged")
-    public Flux<Customers> getAllPaginatedCustomers(@RequestParam(defaultValue = "0") int page,
-                                                    @RequestParam(defaultValue = "5") int size) {
+    public Flux<Customer> getAllPaginatedCustomers(@RequestParam(defaultValue = "0") int page,
+                                                   @RequestParam(defaultValue = "5") int size) {
         return customerService.getAllPaginated(page, size);
     }
 
@@ -77,12 +77,12 @@ public class PaginatedController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "Paged projects list",
                             content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = Customers.class)))
+                                    schema = @Schema(implementation = Customer.class)))
             }
     )
     @GetMapping("/projects/paged")
-    public Flux<Projects> getAllPaginatedProjects(@RequestParam(defaultValue = "0") int page,
-                                                  @RequestParam(defaultValue = "5") int size) {
+    public Flux<Project> getAllPaginatedProjects(@RequestParam(defaultValue = "0") int page,
+                                                 @RequestParam(defaultValue = "5") int size) {
         return projectService.getAllPaginated(page, size);
     }
 }

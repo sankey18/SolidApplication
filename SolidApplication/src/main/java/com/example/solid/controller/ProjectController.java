@@ -1,8 +1,7 @@
 package com.example.solid.controller;
 
 
-import com.example.solid.model.Customers;
-import com.example.solid.model.Projects;
+import com.example.solid.model.Project;
 import com.example.solid.service.ProjectService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -30,11 +29,11 @@ public class ProjectController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "List of projects",
                             content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = Projects.class)))
+                                    schema = @Schema(implementation = Project.class)))
             }
     )
     @GetMapping
-    public Flux<Projects> getAllProjects(){
+    public Flux<Project> getAllProjects(){
         return projectService.getAllProjects();
     }
 
@@ -44,12 +43,12 @@ public class ProjectController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "Project created successfully",
                             content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = Projects.class))),
+                                    schema = @Schema(implementation = Project.class))),
                     @ApiResponse(responseCode = "400", description = "Invalid input", content = @Content)
             }
     )
     @PostMapping
-    public Mono<Projects> create(@RequestBody Projects projects) {
+    public Mono<Project> create(@RequestBody Project projects) {
         return projectService.create(projects);
     }
 
@@ -62,12 +61,12 @@ public class ProjectController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "Project found",
                             content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = Projects.class))),
+                                    schema = @Schema(implementation = Project.class))),
                     @ApiResponse(responseCode = "404", description = "Customer not found", content = @Content)
             }
     )
     @GetMapping("/{id}")
-    public Mono<Projects> getById(@PathVariable String id) {
+    public Mono<Project> getById(@PathVariable String id) {
         return projectService.getById(id);
     }
 
@@ -96,12 +95,12 @@ public class ProjectController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "Project updated successfully",
                             content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = Projects.class))),
+                                    schema = @Schema(implementation = Project.class))),
                     @ApiResponse(responseCode = "404", description = "Project not found", content = @Content)
             }
     )
     @PutMapping("/{id}")
-    public Mono<Projects> update(@PathVariable String id, @RequestBody Projects projects) {
+    public Mono<Project> update(@PathVariable String id, @RequestBody Project projects) {
         return projectService.update(id, projects);
     }
 

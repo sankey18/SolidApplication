@@ -1,6 +1,6 @@
 package com.example.solid.controller;
 
-import com.example.solid.model.Customers;
+import com.example.solid.model.Customer;
 import com.example.solid.service.CustomerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -29,11 +29,11 @@ public class CustomerController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "List of Customers",
                             content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = Customers.class)))
+                                    schema = @Schema(implementation = Customer.class)))
             }
     )
     @GetMapping
-    public Flux<Customers> getAll() {
+    public Flux<Customer> getAll() {
         return customerService.getAll();
     }
 
@@ -43,12 +43,12 @@ public class CustomerController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "Customers created successfully",
                             content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = Customers.class))),
+                                    schema = @Schema(implementation = Customer.class))),
                     @ApiResponse(responseCode = "400", description = "Invalid input", content = @Content)
             }
     )
     @PostMapping
-    public Mono<Customers> create(@RequestBody Customers customers) {
+    public Mono<Customer> create(@RequestBody Customer customers) {
         return customerService.create(customers);
     }
 
@@ -61,12 +61,12 @@ public class CustomerController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "Employee found",
                             content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = Customers.class))),
+                                    schema = @Schema(implementation = Customer.class))),
                     @ApiResponse(responseCode = "404", description = "Customer not found", content = @Content)
             }
     )
     @GetMapping("/{id}")
-    public Mono<Customers> getById(@PathVariable String id) {
+    public Mono<Customer> getById(@PathVariable String id) {
         return customerService.getById(id);
     }
 
@@ -79,12 +79,12 @@ public class CustomerController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "Customer updated successfully",
                             content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = Customers.class))),
+                                    schema = @Schema(implementation = Customer.class))),
                     @ApiResponse(responseCode = "404", description = "Customer not found", content = @Content)
             }
     )
     @PutMapping("/{id}")
-    public Mono<Customers> update(@PathVariable String id, @RequestBody Customers customers) {
+    public Mono<Customer> update(@PathVariable String id, @RequestBody Customer customers) {
         return customerService.update(id, customers);
     }
 

@@ -1,7 +1,7 @@
 package com.example.solid.controller;
 
 import com.example.solid.model.dto.EmployeeDTO;
-import com.example.solid.model.Employees;
+import com.example.solid.model.Employee;
 import com.example.solid.service.EmployeeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -29,11 +29,11 @@ public class EmployeeController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "List of employees",
                             content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = Employees.class)))
+                                    schema = @Schema(implementation = Employee.class)))
             }
     )
     @GetMapping
-    public Flux<Employees> getAll(){
+    public Flux<Employee> getAll(){
         return employeeService.getAll();
     }
 
@@ -43,12 +43,12 @@ public class EmployeeController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "Employee created successfully",
                             content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = Employees.class))),
+                                    schema = @Schema(implementation = Employee.class))),
                     @ApiResponse(responseCode = "400", description = "Invalid input", content = @Content)
             }
     )
     @PostMapping
-    public Mono<Employees> create(@RequestBody Employees emp) {
+    public Mono<Employee> create(@RequestBody Employee emp) {
         return employeeService.create(emp);
     }
 
@@ -61,12 +61,12 @@ public class EmployeeController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "Employee found",
                             content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = Employees.class))),
+                                    schema = @Schema(implementation = Employee.class))),
                     @ApiResponse(responseCode = "404", description = "Employee not found", content = @Content)
             }
     )
     @GetMapping("/{id}")
-    public Mono<Employees> getById(@PathVariable String id) {
+    public Mono<Employee> getById(@PathVariable String id) {
         return employeeService.getById(id);
     }
 
@@ -79,12 +79,12 @@ public class EmployeeController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "Employee updated successfully",
                             content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = Employees.class))),
+                                    schema = @Schema(implementation = Employee.class))),
                     @ApiResponse(responseCode = "404", description = "Employee not found", content = @Content)
             }
     )
     @PutMapping("/{id}")
-    public Mono<Employees> update(@PathVariable String id, @RequestBody Employees emp) {
+    public Mono<Employee> update(@PathVariable String id, @RequestBody Employee emp) {
         return employeeService.update(id, emp);
     }
 
@@ -117,7 +117,7 @@ public class EmployeeController {
             }
     )
     @GetMapping("/high-salary")
-    public Flux<Employees> getHighSalaryEmployees(@RequestParam double salary) {
+    public Flux<Employee> getHighSalaryEmployees(@RequestParam double salary) {
         return employeeService.getHighSalaryEmployees(salary);
     }
 
@@ -127,7 +127,7 @@ public class EmployeeController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "List of employees",
                             content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = Employees.class)))
+                                    schema = @Schema(implementation = Employee.class)))
             }
     )
     @GetMapping("/allEmployeeData")

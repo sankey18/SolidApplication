@@ -1,8 +1,7 @@
 package com.example.solid.service;
 
 import com.example.solid.exception.ProjectNotFoundException;
-import com.example.solid.model.Customers;
-import com.example.solid.model.Projects;
+import com.example.solid.model.Project;
 import com.example.solid.repository.ProjectRepository;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -17,17 +16,17 @@ public class ProjectService {
         this.projectRepository = projectRepository;
     }
 
-    public Flux<Projects> getAllProjects(){
+    public Flux<Project> getAllProjects(){
         return projectRepository.findAll()
                 .switchIfEmpty(Mono.error(new RuntimeException("No Projects Data Available")));
     }
 
-    public Mono<Projects> create(Projects projects) {
+    public Mono<Project> create(Project projects) {
         return projectRepository.save(projects)
                 .onErrorMap(ex -> new RuntimeException("Failed to create project : "+ex.getMessage()));
     }
 
-    public Mono<Projects> getById(String id) {
+    public Mono<Project> getById(String id) {
         return projectRepository.findById(id)
                 .switchIfEmpty(Mono.error(new ProjectNotFoundException("Not Project is assigned against id:"+id)));
     }
@@ -38,13 +37,13 @@ public class ProjectService {
                 .flatMap(projectRepository::delete);
     }
 
-    public Mono<Projects> update(String id, Projects projects) {
+    public Mono<Project> update(String id, Project projects) {
         return projectRepository.findById(id)
                 .switchIfEmpty(Mono.error(new ProjectNotFoundException("No project Found for id:->"+id)))
                 .flatMap(
                         existing ->
                                 projectRepository.save(
-                                        Projects.builder()
+                                        Project.builder()
                                                 .id(id)
                                                 .name(projects.getName())
                                                 .description(projects.getDescription())
@@ -54,7 +53,7 @@ public class ProjectService {
                 );
     }
 
-    public Flux<Projects> getAllPaginated(int page, int size) {
+    public Flux<Project> getAllPaginated(int page, int size) {
         return projectRepository.findAll()
                 .skip((long) page * size)
                 .take(size);

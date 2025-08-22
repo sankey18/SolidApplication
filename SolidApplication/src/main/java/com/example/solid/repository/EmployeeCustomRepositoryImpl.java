@@ -1,6 +1,6 @@
 package com.example.solid.repository;
 
-import com.example.solid.model.Employees;
+import com.example.solid.model.Employee;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
@@ -21,12 +21,12 @@ public class EmployeeCustomRepositoryImpl implements EmployeeCustomRepository {
     }
 
     @Override
-    public Flux<Employees> findEmployeesBySalaryGreaterThan(double salary) {
+    public Flux<Employee> findEmployeesBySalaryGreaterThan(double salary) {
         Aggregation aggregation = newAggregation(
                 match(Criteria.where("salary").gt(salary)),
                 sort(Sort.by(Sort.Direction.DESC, "salary"))
         );
 
-        return mongoTemplate.aggregate(aggregation, "employees", Employees.class);
+        return mongoTemplate.aggregate(aggregation, "employees", Employee.class);
     }
 }
